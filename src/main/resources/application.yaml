@@ -1,3 +1,13 @@
 spring:
   application:
     name: agent
+
+anthropic:
+  api-key: ${ANTHROPIC_API_KEY}
+  model: claude-sonnet-4
+  max-tokens: 800
+  timeout-seconds: 60
+
+mcp:
+  base-url: ${MCP_BASE_URL:http://localhost:3333}
+  path: ${MCP_PATH:/mcp}
