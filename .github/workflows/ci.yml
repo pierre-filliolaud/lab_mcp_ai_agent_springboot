@@ -20,7 +20,9 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission
-        run: chmod +x ./agent/gradlew.sh
+        run: chmod +x gradlew
+        working-directory: ./agent
 
       - name: Build & Test
-        run: ./agent/gradlew --no-daemon clean test
+        run: ./gradlew --no-daemon clean test
+        working-directory: ./agent
