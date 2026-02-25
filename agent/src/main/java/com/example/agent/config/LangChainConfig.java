@@ -1,10 +1,10 @@
-package net.filecode.agent.config;
+package com.example.agent.config;
 
 //import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
-import net.filecode.agent.BacklogAgent;
-import net.filecode.agent.tools.AgentTool;
+import com.example.agent.BacklogAgent;
+import com.example.agent.tools.AgentTool;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
