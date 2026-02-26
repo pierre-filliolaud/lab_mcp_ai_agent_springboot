@@ -1,0 +1,18 @@
+github:
+  owner: ${GITHUB_OWNER:default-owner}
+  repo: ${GITHUB_REPO:default-repo}
+
+openai:
+  api-key: ${OPENAI_API_KEY:no-key}
+  model: gpt-4o-mini
+  timeout-seconds: 60
+
+mcp:
+  base-url: ${MCP_BASE_URL:http://localhost:3333}
+  path: ${MCP_PATH:/mcp}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
