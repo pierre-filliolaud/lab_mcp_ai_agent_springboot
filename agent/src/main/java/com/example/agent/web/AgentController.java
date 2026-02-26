@@ -1,4 +1,4 @@
-package com.example.web;
+package com.example.agent.web;
 
 import com.example.agent.service.AgentService;
 import org.springframework.web.bind.annotation.PostMapping;

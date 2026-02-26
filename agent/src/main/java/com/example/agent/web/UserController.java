@@ -2,26 +2,25 @@ package com.example.agent.web;
 
 import com.example.agent.domain.User;
 import com.example.agent.service.UserService;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService users;
+    private final UserService userService;
 
-    public UserController(UserService users) {
-        this.users = users;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public User create(@RequestParam String name, @RequestParam String email) {
-        return users.create(name, email);
+        return userService.create(name, email);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/{id}")
     public User getById(@PathVariable String id) {
-        return users.getById(id);
+        return userService.getById(id);
     }
 }
