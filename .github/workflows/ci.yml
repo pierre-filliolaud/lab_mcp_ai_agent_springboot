@@ -2,26 +2,31 @@ name: CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
+
+defaults:
+  run:
+    working-directory: agent
 
 jobs:
-  build-test:
+  build-test-docker:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: mcp-github-http-wrapper
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          node-version: "20"
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
 
-      - name: Install
-        run: npm install
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      - name: Test
-        run: npm test --if-present
+      - name: Build & Test
+        run: ./gradlew --no-daemon clean test
+
+      - name: Docker Build (no push)
+        run: docker build -t local/agent:ci .
