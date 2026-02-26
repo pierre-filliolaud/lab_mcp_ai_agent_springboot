@@ -1,3 +1,5 @@
+package com.example.agent.config;
+
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.service.AiServices;
 import com.example.agent.agent.BacklogAgent;
