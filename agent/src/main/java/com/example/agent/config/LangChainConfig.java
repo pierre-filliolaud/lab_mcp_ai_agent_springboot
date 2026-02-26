@@ -17,8 +17,8 @@ import java.util.List;
 public class LangChainConfig {
     @Bean
     public AnthropicChatModel anthropicChatModel(
-            @Value("${anthropic.api-key}") String apiKey,
-            @Value("${anthropic.model}") String model,
+            @Value("${anthropic.api-key:test-api-key}") String apiKey,
+            @Value("${anthropic.model:test-model}") String model,
             @Value("${anthropic.max-tokens:800}") Integer maxTokens,
             @Value("${anthropic.timeout-seconds:60}") Integer timeoutSeconds
     ) {
