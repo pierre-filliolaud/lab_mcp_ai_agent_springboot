@@ -28,7 +28,7 @@ dependencies {
 
   // LangChain4j core + Gemini integration 
   implementation "dev.langchain4j:langchain4j"
-  implementation "dev.langchain4j:langchain4j-google-gemini"
+  implementation "dev.langchain4j:langchain4j-google-ai-gemini"
 
   // Optional: JDK HTTP client integration
   implementation "dev.langchain4j:langchain4j-http-client-jdk"
