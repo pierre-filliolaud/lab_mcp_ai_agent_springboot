@@ -1,0 +1,8 @@
+github:
+  owner: ${GITHUB_OWNER}
+  repo: ${GITHUB_REPO}
+  
+gemini:
+  api-key: "AIzaSyCtZW5xwmkj9QOYGXJdkqiN4Bba6x4_bnE"
+  model: gemini-pro
+  timeout-seconds: 60
