@@ -1,5 +1,5 @@
-# 🧪 LAB – Building an MCP AI Agent with Claude
-**Java · Spring Boot · Gradle · LangChain4j · MCP · Claude · Testing · CI/CD · Docker · GitHub**
+# 🧪 LAB – Building an MCP AI Agent with Gemini
+**Java · Spring Boot · Gradle · LangChain4j · MCP · Gemini · Testing · CI/CD · Docker · GitHub**
 
 ---
 In this lab, you will build a real AI agent not a chatbot.
@@ -18,7 +18,7 @@ An AI Agent is a system that:
 Build **step by step** an **AI agent** able to:
 
 1. understand a natural language request,
-2. reason with **Claude (Anthropic)**,
+2. reason with **Gemini (Google)**,
 3. calls **standardized tools via MCP**,
 4. automatically create a **GitHub issue**,
 5. be **tested**, **containerized**, and **integrated into CI/CD**.
@@ -72,7 +72,7 @@ flowchart LR
 
         BacklogAgent["🔨 BacklogAgent<br/>(LangChain4j AI Service)<br/>System + User Prompt"]
 
-        LangChainConfig["🔨 LangChainConfig<br/>AnthropicChatModel<br/>Tool Wiring"]
+        LangChainConfig["🔨 LangChainConfig<br/>GoogleChatModel<br/>Tool Wiring"]
 
         GitHubMcpTools["🔨 GitHubMcpTools<br/>@Tool createIssue(...)"]
 
@@ -82,7 +82,7 @@ flowchart LR
     %% =========================
     %% External AI
     %% =========================
-    Claude["📦 Anthropic Claude API<br/>(chat + tool-use)"]
+    Gemini["📦 Google Gemini API<br/>(chat + tool-use)"]
 
     %% =========================
     %% MCP Layer
@@ -104,8 +104,8 @@ flowchart LR
     AgentController --> AgentService
     AgentService --> BacklogAgent
 
-    BacklogAgent -->|chat + tool schema| Claude
-    Claude -->|tool call request| BacklogAgent
+    BacklogAgent -->|chat + tool schema| Gemini
+    Gemini -->|tool call request| BacklogAgent
 
     BacklogAgent -->|Java @Tool call| GitHubMcpTools
     GitHubMcpTools --> McpHttpClient
@@ -154,14 +154,14 @@ Create a GitHub Issue:
 
 **Title**
 ```
-[FEATURE] AI Agent – LangChain4j + MCP + Claude
+[FEATURE] AI Agent – LangChain4j + MCP + Gemini
 ```
 
 **Description**
 ```md
 -## Goal
 Build an AI agent using LangChain4j 1.10.0 that:
-- reasons with Claude (Anthropic)
+- reasons with Gemini (Google)
 - calls tools via MCP
 - creates GitHub issues automatically
 
@@ -198,8 +198,8 @@ Each step in this lab **must have its own issue**.
 | STEP 1   | `[STEP 1] Bootstrap project with Spring Initializr` |
 | STEP 1.1 | `[STEP 1.1] Create sample User`                     |
 | STEP 2   | `[STEP 2] Add LangChain4j 1.10.0 dependencies`      |
-| STEP 3   | `[STEP 3] Configure Anthropic and MCP endpoints`    |
-| STEP 4   | `[STEP 4] Connect LangChain4j to Claude`            |
+| STEP 3   | `[STEP 3] Configure Google and MCP endpoints`    |
+| STEP 4   | `[STEP 4] Connect LangChain4j to Gemini`            |
 | STEP 5   | `[STEP 5] Implement MCP HTTP client`                |
 | STEP 6   | `[STEP 6] Bridge MCP tools with LangChain4j`        |
 | STEP 7   | `[STEP 7] Expose Agent REST API`                    |
@@ -301,13 +301,13 @@ The agent should:
 - Java 21
 - Git
 - GitHub account + repository
-- Anthropic API key
+- Google API key
 - Fine‑grained GitHub token (Issues RW)
 
 Export secrets:
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-xxx
+export GOOGLE_API_KEY=YOUR_GOOGLE_API_KEY
 export GITHUB_TOKEN=github_pat_xxx
 export GITHUB_OWNER="whoIam"
 export GITHUB_REPO="lab_mcp_ai_agent_springboot"
@@ -900,7 +900,7 @@ dependencies {
   // LangChain4j BOM (pins everything to 1.10.0)
   implementation platform("dev.langchain4j:langchain4j-bom:1.10.0")
 
-  // LangChain4j core + Anthropic
+  // LangChain4j core + Google
   implementation "dev.langchain4j:langchain4j"
   implementation "dev.langchain4j:langchain4j-anthropic"
   //implementation "dev.langchain4j:langchain4j-openai"
@@ -929,8 +929,8 @@ github:
   repo: ${GITHUB_REPO}
   
 anthropic:
-  api-key: ${ANTHROPIC_API_KEY}
-  model: claude-opus-4-20250514
+  api-key: ${GOOGLE_API_KEY}
+  model: gemini-1.5-pro
   timeout-seconds: 60
   
 openai:
@@ -945,7 +945,7 @@ mcp:
 
 ---
 
-# 🔹 STEP 4 — Connect to Claude (LangChain4j 1.10.0)
+# 🔹 STEP 4 — Connect to Gemini (LangChain4j 1.10.0)
 
 ## 4.1 Agent Interface
 
@@ -979,14 +979,14 @@ public interface BacklogAgent {
 }
 ```
 
-## 4.2 Spring Configuration: Claude model + Agent builder
+## 4.2 Spring Configuration: Gemini model + Agent builder
 
 `src/main/java/com/example/agent/config/LangChainConfig.java`
 
 ```java
 package net.filecode.agent.config;
 
-import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.anthropic.GoogleChatModel;
 //import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import net.filecode.agent.BacklogAgent;
@@ -1002,13 +1002,13 @@ import java.util.List;
 @Configuration
 public class LangChainConfig {
   @Bean
-  public AnthropicChatModel anthropicChatModel(
+  public GoogleChatModel anthropicChatModel(
           @Value("${anthropic.api-key}") String apiKey,
           @Value("${anthropic.model}") String model,
           @Value("${anthropic.max-tokens:800}") Integer maxTokens,
           @Value("${anthropic.timeout-seconds:60}") Integer timeoutSeconds
   ) {
-    return AnthropicChatModel.builder()
+    return GoogleChatModel.builder()
             .apiKey(apiKey)
             .modelName(model)
             .maxTokens(maxTokens)
@@ -1030,7 +1030,7 @@ public class LangChainConfig {
 //  }
 
   @Bean
-  public BacklogAgent backlogAgent(AnthropicChatModel model, List<AgentTool> tools) {
+  public BacklogAgent backlogAgent(GoogleChatModel model, List<AgentTool> tools) {
 
     System.out.println("=== Agent tools loaded: " + tools.size() + " ===");
     tools.forEach(t -> System.out.println(" - " + t.getClass().getName()));
@@ -1345,8 +1345,8 @@ class AgentControllerIT {
 }
 ```
 
-> This integration test does not call Anthropic.  
-> For a true E2E test, run manually with `ANTHROPIC_API_KEY` and a real MCP server.
+> This integration test does not call Google.  
+> For a true E2E test, run manually with `GOOGLE_API_KEY` and a real MCP server.
 
 ---
 
@@ -1372,7 +1372,7 @@ Run:
 ```bash
 docker build -t ai-agent .
 docker run -p 8080:8080 \
-  -e ANTHROPIC_API_KEY \
+  -e GOOGLE_API_KEY \
   -e GITHUB_TOKEN \
   ai-agent
 ```
@@ -1475,7 +1475,7 @@ At the end of this lab, you have:
 
 1. Spring Initializr project runs
 2. LangChain4j BOM compiles
-3. Claude model bean builds
+3. Gemini model bean builds
 4. MCP client can list/call tools
 5. Tool wrapper calls MCP
 6. Agent endpoint runs
@@ -1495,7 +1495,7 @@ This step deploys:
 
 **Inside Kubernetes:**
 - `ai-agent` calls the MCP server through a **ClusterIP service** (`http://github-mcp-server:3333/mcp`)
-- Claude (Anthropic) is called externally over HTTPS from the cluster
+- Gemini (Google) is called externally over HTTPS from the cluster
 
 ---
 
@@ -1556,13 +1556,13 @@ minikube image load github-mcp-server:dev
 
 ---
 
-## 12.3 Create Secrets (Anthropic + GitHub)
+## 12.3 Create Secrets (Google + GitHub)
 
 Create a single secret containing both API keys:
 
 ```bash
 kubectl -n lab-agent create secret generic agent-secrets \
-  --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
+  --from-literal=GOOGLE_API_KEY="$GOOGLE_API_KEY" \
   --from-literal=GITHUB_TOKEN="$GITHUB_TOKEN"
 ```
 
@@ -1660,11 +1660,11 @@ spec:
           image: ai-agent:dev
           imagePullPolicy: IfNotPresent
           env:
-            - name: ANTHROPIC_API_KEY
+            - name: GOOGLE_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: agent-secrets
-                  key: ANTHROPIC_API_KEY
+                  key: GOOGLE_API_KEY
             - name: MCP_BASE_URL
               value: "http://github-mcp-server:3333"
             - name: MCP_PATH
@@ -1727,7 +1727,7 @@ curl http://localhost:8080/api/agent/run \
 ```
 
 ✅ Expected:
-- `ai-agent` calls Claude
+- `ai-agent` calls Gemini
 - `ai-agent` calls MCP server via Kubernetes service
 - MCP server creates a GitHub issue
 
@@ -1754,7 +1754,7 @@ Add a **Kubernetes smoke test** running in GitHub Actions:
 - Print pod logs on failure
 
 > ✅ This step validates Docker + Kubernetes integration  
-> ❌ External calls (Anthropic / OpenAI / GitHub MCP) are disabled in CI
+> ❌ External calls (Google / OpenAI / GitHub MCP) are disabled in CI
 
 ---
 
@@ -1820,7 +1820,7 @@ In `LangChainConfig`, mark real LLM beans as non‑CI:
 ```java
 @Bean
 @Profile("!ci")
-public AnthropicChatModel anthropicChatModel(...) { ... }
+public GoogleChatModel anthropicChatModel(...) { ... }
 
 @Bean
 @Profile("!ci")
