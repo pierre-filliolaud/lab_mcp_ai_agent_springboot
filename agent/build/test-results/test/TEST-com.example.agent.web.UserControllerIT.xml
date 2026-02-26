@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.agent.web.UserControllerIT" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-26T10:11:23.523Z" hostname="DESKTOP-OGMJR52" time="1.779">
+  <properties/>
+  <testcase name="should_create_and_get_user()" classname="com.example.agent.web.UserControllerIT" time="1.779"/>
+  <system-out><![CDATA[11:11:18.766 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.agent.web.UserControllerIT]: UserControllerIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:11:19.031 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.agent.AgentApplication for test class com.example.agent.web.UserControllerIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2026-02-26T11:11:19.972+01:00  INFO 30676 --- [    Test worker] com.example.agent.web.UserControllerIT   : Starting UserControllerIT using Java 21.0.10 with PID 30676 (started by Kewe in C:\Users\Kewe\IdeaProjects\lab_mcp_ai_agent_springboot\agent)
+2026-02-26T11:11:19.974+01:00  INFO 30676 --- [    Test worker] com.example.agent.web.UserControllerIT   : No active profile set, falling back to 1 default profile: "default"
+2026-02-26T11:11:22.265+01:00  INFO 30676 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-02-26T11:11:22.290+01:00  INFO 30676 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-26T11:11:22.290+01:00  INFO 30676 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-02-26T11:11:22.393+01:00  INFO 30676 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-26T11:11:22.393+01:00  INFO 30676 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2384 ms
+2026-02-26T11:11:23.199+01:00  INFO 30676 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 64277 (http) with context path '/'
+2026-02-26T11:11:23.209+01:00  INFO 30676 --- [    Test worker] com.example.agent.web.UserControllerIT   : Started UserControllerIT in 3.853 seconds (process running for 6.285)
+2026-02-26T11:11:24.965+01:00  INFO 30676 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-26T11:11:24.965+01:00  INFO 30676 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-26T11:11:24.965+01:00  INFO 30676 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\Kewe\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.19\154da3a65b4f4a909d3e5bdec55d1b2b4cbb6ce1\byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
