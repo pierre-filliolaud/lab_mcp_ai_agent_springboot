@@ -21,6 +21,8 @@ jobs:
 
       - name: Grant execute permission
         run: chmod +x gradlew
+        working-directory: agent
 
       - name: Build & Test
         run: ./gradlew --no-daemon clean test
+        working-directory: agent
