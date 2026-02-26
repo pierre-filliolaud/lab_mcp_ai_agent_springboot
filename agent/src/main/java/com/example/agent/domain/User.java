@@ -1,4 +1,3 @@
 package com.example.agent.domain;
 
-public class User {
-}
+public record User(String id, String name, String email) { }
