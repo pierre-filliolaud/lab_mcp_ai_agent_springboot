@@ -26,6 +26,7 @@ jobs:
           cache: gradle
 
       - name: Build & Test
+        working-directory: agent
         run: ./gradlew --no-daemon clean test
 
       - name: Log in to GHCR

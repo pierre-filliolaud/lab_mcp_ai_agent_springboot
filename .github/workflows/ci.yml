@@ -28,4 +28,5 @@ jobs:
         run: ./gradlew --no-daemon clean test
 
       - name: Docker Build (no push)
+        working-directory: agent
         run: docker build -t local/agent:ci .
