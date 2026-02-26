@@ -1,6 +1,7 @@
 package com.example.agent.config;
 
 //import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import com.example.agent.BacklogAgent;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.time.Duration;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @Configuration
 public class LangChainConfig {
   @Bean
+  @Profile("!ci")
   public OpenAiChatModel openAiChatModel(
           @Value("${openai.api-key}") String apiKey,
           @Value("${openai.model}") String model,
@@ -29,7 +32,7 @@ public class LangChainConfig {
   }
 
   @Bean
-  public BacklogAgent backlogAgent(OpenAiChatModel model, List<AgentTool> tools) {
+  public BacklogAgent backlogAgent(ChatModel model, List<AgentTool> tools) {
 
     System.out.println("=== Agent tools loaded: " + tools.size() + " ===");
     tools.forEach(t -> System.out.println(" - " + t.getClass().getName()));
