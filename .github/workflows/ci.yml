@@ -5,7 +5,13 @@ on:
     branches: [ "**" ]
   pull_request:
     branches: [ "main" ]
+permissions:
+  contents: read
+  packages: write
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -30,3 +36,20 @@ jobs:
       - name: Docker Build (no push)
         working-directory: agent
         run: docker build -t local/agent:ci .
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Build & Push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./agent
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        
