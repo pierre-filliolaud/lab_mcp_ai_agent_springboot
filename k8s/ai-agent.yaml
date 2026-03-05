@@ -27,6 +27,10 @@ spec:
               value: "http://github-mcp-server:3333"
             - name: MCP_PATH
               value: "/mcp"
+            - name: GITHUB_OWNER
+              value: "nfatousamb282"
+            - name: GITHUB_REPO
+              value: "lab_mcp_ai_agent_springboot"
           ports:
             - containerPort: 8080
 ---
