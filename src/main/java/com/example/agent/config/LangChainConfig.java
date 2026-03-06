@@ -30,10 +30,6 @@ public class LangChainConfig {
 
     @Bean
     public BacklogAgent backlogAgent(AnthropicChatModel model, List<AgentTool> tools) {
-
-        System.out.println("=== Agent tools loaded: " + tools.size() + " ===");
-        tools.forEach(t -> System.out.println(" - " + t.getClass().getName()));
-
         return AiServices.builder(BacklogAgent.class)
                 .chatModel(model)
                 .tools(tools.toArray())
