@@ -1,0 +1,11 @@
+build/
+.gradle/
+.idea/
+.vscode/
+bin/
+out/
+Dockerfile
+.dockerignore
+.git/
+.gitignore
+*.log
