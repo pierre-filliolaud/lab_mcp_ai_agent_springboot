@@ -25,7 +25,7 @@ class McpHttpClientTest {
   @BeforeEach
   void setUp() {
     webClient = Mockito.mock(WebClient.class);
-    WebClient.Builder builder = Mockito.mock(WebClient.class.Builder.class);
+    WebClient.Builder builder = Mockito.mock(WebClient.Builder.class);
     when(builder.baseUrl(any())).thenReturn(builder);
     when(builder.build()).thenReturn(webClient);
 
@@ -40,10 +40,9 @@ class McpHttpClientTest {
   @Test
   void testListToolsSuccess() {
     Map<String, Object> mockResponse = Map.of(
-            "jsonrpc", "2.0",
-            "id", "123",
-            "result", Map.of("tools", "[]")
-    );
+        "jsonrpc", "2.0",
+        "id", "123",
+        "result", Map.of("tools", "[]"));
 
     when(webClient.post()).thenReturn(requestBodyUriSpec);
     when(requestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
@@ -56,7 +55,7 @@ class McpHttpClientTest {
     Mono<Object> result = mcpHttpClient.listTools();
 
     StepVerifier.create(result)
-            .expectNextMatches(res -> ((Map) res).containsKey("tools"))
-            .verifyComplete();
+        .expectNextMatches(res -> ((Map) res).containsKey("tools"))
+        .verifyComplete();
   }
 }

@@ -11,70 +11,58 @@ import java.util.UUID;
 
 @Component
 public class McpHttpClient {
-  private final WebClient web;
-  private final String path;
 
-  public McpHttpClient(WebClient.Builder builder,
-                       @Value("${mcp.base-url}") String baseUrl,
-                       @Value("${mcp.path:/mcp}") String path) {
-    this.web = builder.baseUrl(baseUrl).build();
-    this.path = path;
-  }
+    private final WebClient webClient;
+    private final String mcpPath;
 
-  public Mono<Object> callTool(String toolName, Map<String, Object> arguments) {
-    Map<String, Object> payload = Map.of(
-            "jsonrpc", "2.0",
-            "id", UUID.randomUUID().toString(),
-            "method", "tools/call",
-            "params", Map.of(
-                    "name", toolName,
-                    "arguments", arguments
-            )
-    );
+    public McpHttpClient(WebClient.Builder webClientBuilder,
+            @Value("${mcp.base-url}") String baseUrl,
+            @Value("${mcp.path}") String path) {
+        this.webClient = webClientBuilder.baseUrl(baseUrl).build();
+        this.mcpPath = path;
+    }
 
-    return web.post()
-            .uri(path)
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(payload)
-            .retrieve()
-            .onStatus(s -> s.isError(), r ->
-                    r.bodyToMono(String.class)
-                            .map(b -> new RuntimeException("MCP HTTP " + r.statusCode() + ": " + b)))
-            .bodyToMono(Map.class)
-            .map(resp -> {
-              if (resp.containsKey("error")) {
-                throw new RuntimeException("MCP error full response: " + resp);
-              }
-              Object result = resp.get("result");
-              if (result == null) {
-                throw new RuntimeException("MCP missing result, full response: " + resp);
-              }
-              return (Map) result;
-            });
-  }
+    public Mono<Object> listTools() {
+        Map<String, Object> request = Map.of(
+                "jsonrpc", "2.0",
+                "method", "tools/list",
+                "id", UUID.randomUUID().toString(),
+                "params", Map.of());
 
-  public Mono<Object> listTools() {
-    Map<String, Object> payload = Map.of(
-            "jsonrpc", "2.0",
-            "id", UUID.randomUUID().toString(),
-            "method", "tools/list",
-            "params", Map.of()
-    );
+        return webClient.post()
+                .uri(mcpPath)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(response -> {
+                    if (response.containsKey("error")) {
+                        throw new RuntimeException("MCP Error: " + response.get("error"));
+                    }
+                    return response.get("result");
+                });
+    }
 
-    return web.post()
-            .uri(path)
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(payload)
-            .retrieve()
-            .onStatus(s -> s.isError(), r ->
-                    r.bodyToMono(String.class)
-                            .map(b -> new RuntimeException("MCP HTTP " + r.statusCode() + ": " + b)))
-            .bodyToMono(Map.class)
-            .map(resp -> {
-              if (resp.containsKey("error")) {
-                throw new RuntimeException("MCP error: " + resp.get("error"));
-              }
-              return resp.get("result");
-            });
-  }
+    public Mono<Object> callTool(String toolName, Map<String, Object> arguments) {
+        Map<String, Object> request = Map.of(
+                "jsonrpc", "2.0",
+                "method", "tools/call",
+                "id", UUID.randomUUID().toString(),
+                "params", Map.of(
+                        "name", toolName,
+                        "arguments", arguments));
+
+        return webClient.post()
+                .uri(mcpPath)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(response -> {
+                    if (response.containsKey("error")) {
+                        throw new RuntimeException("MCP Tool Error: " + response.get("error"));
+                    }
+                    return response.get("result");
+                });
+    }
 }

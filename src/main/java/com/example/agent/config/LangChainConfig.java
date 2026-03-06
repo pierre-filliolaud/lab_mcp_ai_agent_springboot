@@ -13,6 +13,7 @@ import java.util.List;
 
 @Configuration
 public class LangChainConfig {
+
     @Bean
     public AnthropicChatModel anthropicChatModel(
             @Value("${anthropic.api-key}") String apiKey,
