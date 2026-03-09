@@ -3,7 +3,11 @@ import bodyParser from "body-parser";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 
+<<<<<<< HEAD
 const PORT = Number(process.env.PORT || 8061);
+=======
+const PORT = Number(process.env.PORT || 3333);
+>>>>>>> 8204959da19a6264a8bdea29fe7229bc6beaf3a9
 const PATH = process.env.MCP_PATH || "/mcp";
 const TOKEN = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 
