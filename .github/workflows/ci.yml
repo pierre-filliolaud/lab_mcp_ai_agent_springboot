@@ -25,5 +25,43 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build --no-daemon
 
-    - name: Verify Docker build
-      run: docker build -t spring-agent .
+  kubernetes:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start Minikube
+        uses: medyagh/setup-minikube@master
+
+      - name: Verify cluster
+        run: kubectl get nodes
+
+      - name: Build Docker image inside Minikube
+        run: |
+          eval $(minikube -p minikube docker-env)
+          docker build -t ai-agent:ci .
+
+      - name: Deploy to Minikube
+        run: kubectl apply -f src/main/k8s/ai-agent-deployment.yml
+
+      - name: Wait for pod ready
+        run: |
+          kubectl wait --for=condition=Ready pod -l app=ai-agent --timeout=180s
+          kubectl get pods
+          minikube service list
+
+      - name: Test service health endpoint
+        uses: nick-fields/retry@v3
+        with:
+          timeout_seconds: 10
+          max_attempts: 6
+          command: |
+            curl -fsS "$(minikube service ai-agent --url)/actuator/health"
+
+      - name: Log pods on failure
+        if: failure()
+        run: |
+          kubectl get pods -o wide
+          kubectl logs -l app=ai-agent --tail=200
